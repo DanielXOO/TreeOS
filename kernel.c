@@ -1,3 +1,4 @@
+#include "stdlib.h"
 void kmain(void)
 {
     const char *str = "its better than windows ";
@@ -18,8 +19,8 @@ void kmain(void)
     }
     return;
 }
-void test(){
+
     
-}
+
 
 
