@@ -8,13 +8,11 @@ section .text
 
 global start
 extern kmain
-extern test
 
 start:
   cli
   mov esp, stack_space
   call kmain
-  call test
   hlt
 
 section .bss
