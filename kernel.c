@@ -3,14 +3,16 @@
 #define COLUMNS_IN_LINE 80
 #define BYTES_FOR_EACH_ELEMENT 2
 #define SCREENSIZE BYTES_FOR_EACH_ELEMENT * COLUMNS_IN_LINE * LINES
-/* current cursor location */
-unsigned int current_loc = 0;
-char *vidptr = (char*)0xb8000;
+
+
 extern unsigned char k_array[128];
 extern void keyboard_decoder(void);
 extern char read_port(unsigned short port);
 extern void write_port(unsigned short port, unsigned char data);
 extern void load_idt(unsigned long *idt_ptr);
+/* current cursor location */
+unsigned int current_loc = 0;
+char *vidptr = (char*)0xb8000;
 void proper(void)
 {
     unsigned int i = 0;
@@ -85,26 +87,26 @@ void kdecoder(void)
     char code;
     write_port (0x20 , 0x20);
     status = read_port(0x64);
-    if (status = 0x01) {
+    if (status & 0x01) {
         code = read_port (0x60);
-    }
-    if (code < 0) {
-        return;
-    }
-    vidptr[current_loc++] = k_array[(unsigned char) code];
+        if (code < 0) 
+            return;
+    
+    vidptr[current_loc++] = k_array[code];
     vidptr[current_loc++] = 0x07;
     
-    
+    }
     
 }
 void main(void)
 {
     char *str = "its better than windows ";
-    //proper();
-    //out(str);  
+    proper();
+    out(str);  
     idt_init();
     kb_init(); 
-    return;
+    //kdecoder();
+    while(1);
 }
 
     
