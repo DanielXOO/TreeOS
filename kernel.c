@@ -1,10 +1,12 @@
 #include "I_Olib.h"
-void kmain(void)
+void main(void)
 {
-    const char *str = "its better than windows ";
+    char *str = "its better than windows ";
     proper();
-    out(str);   
-    return;
+    out(str);  
+    idt_init();
+    kb_init(); 
+    while(true);
 }
 
     

@@ -25,16 +25,5 @@ typedef signed long long int64;
  
 #define min(a, b)  (((a) > (b)) ? (b) : (a))
 #define max(a, b)  (((a) > (b)) ? (b) : (a))
-void memset(void *mem, char value, size_t count);
-void memset_word(void *mem, uint16 value, size_t count);
-void memcpy(void *dest, void *scr, size_t count);
-int memcmp(void *mem1, void *mem2, size_t count);
-void *memchr(void *mem, char value, size_t count);
-
-size_t strlen(char *str);
-void strcpy(char *dest, char *src);
-void strncpy(char *dest, char *src, size_t max_count);
-int strcmp(char *str1, char *str2);
-char *strchr(char *str, char value);
 
 #endif
