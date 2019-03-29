@@ -4,6 +4,7 @@
 #define COLUMNS_IN_LINE 80
 #define BYTES_FOR_EACH_ELEMENT 2
 #define SCREENSIZE BYTES_FOR_EACH_ELEMENT * COLUMNS_IN_LINE * LINES
+#define BACKSPACE 0x0E
 extern unsigned char k_array[128];
 extern void keyboard_decoder(void);
 extern char read_port(unsigned short port);
@@ -31,6 +32,10 @@ void out(char *str)
         ++j;
         current_loc = current_loc + 2;
     }
+}
+void bcsp(char code)
+{
+    
 }
 struct IDT_entry{
 	unsigned short int offset_lowerbits;
@@ -90,9 +95,17 @@ void kdecoder(void)
         code = read_port (0x60);
         if (code < 0) 
             return;
-    
-    vidptr[current_loc++] = k_array[code];
-    vidptr[current_loc++] = 0x07;
+        switch (code)
+        {
+            case BACKSPACE:
+                vidptr[current_loc - 2] = ' ';
+                current_loc = current_loc - 2;
+                break; 
+            default:
+                vidptr[current_loc++] = k_array[code];
+                vidptr[current_loc++] = 0x04;
+                break;
+        }
     
     }
     
