@@ -5,15 +5,18 @@
 #define BYTES_FOR_EACH_ELEMENT 2
 #define SCREENSIZE BYTES_FOR_EACH_ELEMENT * COLUMNS_IN_LINE * LINES
 #define BACKSPACE 0x0E
+#define ENTER 0x1C
+
 extern unsigned char k_array[128];
 extern void keyboard_decoder(void);
 extern char read_port(unsigned short port);
 extern void write_port(unsigned short port, unsigned char data);
 extern void load_idt(unsigned long *idt_ptr);
-/* current cursor location */
+
 unsigned int current_loc = 0;
 char *vidptr = (char*)0xb8000;
-void proper(void)
+
+void proper(void) 
 {
     unsigned int i = 0;
     while(i < COLUMNS_IN_LINE * LINES * BYTES_FOR_EACH_ELEMENT)
@@ -21,9 +24,10 @@ void proper(void)
     vidptr[i] = ' ';
     vidptr[i + 1] = 0x07;
     i = i + 2;
+    }
 }
-}
-void out(char *str)
+
+void out(char *str) 
 {
     unsigned int j = 0;
     while(str[j] != '\0'){
@@ -33,10 +37,7 @@ void out(char *str)
         current_loc = current_loc + 2;
     }
 }
-void bcsp(char code)
-{
-    
-}
+
 struct IDT_entry{
 	unsigned short int offset_lowerbits;
 	unsigned short int selector;
@@ -44,7 +45,7 @@ struct IDT_entry{
 	unsigned char type_attr;
 	unsigned short int offset_higherbits;
 };
- 
+
 struct IDT_entry IDT[256];
 
 void idt_init(void)
@@ -81,10 +82,12 @@ void idt_init(void)
 
     load_idt(idt_ptr);
 }
+
 void kb_init(void)
 {
     write_port(0x21 , 0xFD);
 } 
+
 void kdecoder(void)
 {
     unsigned char status;
@@ -100,7 +103,10 @@ void kdecoder(void)
             case BACKSPACE:
                 vidptr[current_loc - 2] = ' ';
                 current_loc = current_loc - 2;
-                break; 
+                break;
+            case ENTER:
+                current_loc = current_loc + ( (COLUMNS_IN_LINE * BYTES_FOR_EACH_ELEMENT) - current_loc %(COLUMNS_IN_LINE * BYTES_FOR_EACH_ELEMENT) );
+                break;
             default:
                 vidptr[current_loc++] = k_array[code];
                 vidptr[current_loc++] = 0x04;
