@@ -11,9 +11,19 @@ global keyboard_decoder
 global read_port
 global write_port
 global load_idt
+global power_down
 
 extern kdecoder
 extern main
+
+power_down:
+  mov ax, 0x1000
+  mov ax, ss
+  mov sp, 0xf000
+  mov ax, 0x5307
+  mov bx, 0x0001
+  mov cx, 0x0003
+  int 0x15
 read_port:
   mov edx, [esp + 4]
   in al, dx   
