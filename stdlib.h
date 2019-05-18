@@ -23,3 +23,7 @@ typedef signed long long int64;
     typedef uint32 size_t;
 #endif
  
+#define min(a, b)  (((a) > (b)) ? (b) : (a))
+#define max(a, b)  (((a) > (b)) ? (b) : (a))
+
+#endif
