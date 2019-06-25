@@ -1,5 +1,5 @@
 #include "k_array.h"
-#include "stdlib.h"
+
 #define LINES 25
 #define COLUMNS_IN_LINE 80
 #define BYTES_FOR_EACH_ELEMENT 2
@@ -15,8 +15,17 @@ extern void load_idt(unsigned long *idt_ptr);
 
 unsigned int current_loc = 0;
 char *vidptr = (char*)0xb8000;
-
-void proper(void) 
+enum{
+    blue = 1,
+    green = 2,
+    lblue = 3,
+    red = 4,
+    purple = 5,
+    orange = 6,
+    white = 7,
+    gray = 8 
+};
+void clean(void) 
 {
     unsigned int i = 0;
     while(i < COLUMNS_IN_LINE * LINES * BYTES_FOR_EACH_ELEMENT)
@@ -26,18 +35,6 @@ void proper(void)
     i = i + 2;
     }
 }
-
-void out(char *str) 
-{
-    unsigned int j = 0;
-    while(str[j] != '\0'){
-        vidptr[current_loc] = str[j];
-        vidptr[current_loc+1] = 0x04;
-        ++j;
-        current_loc = current_loc + 2;
-    }
-}
-
 struct IDT_entry{
 	unsigned short int offset_lowerbits;
 	unsigned short int selector;
@@ -91,13 +88,11 @@ void kb_init(void)
 void kdecoder(void)
 {
     unsigned char status;
-    char code;
+    unsigned char code;
     write_port (0x20 , 0x20);
     status = read_port(0x64);
     if (status & 0x01) {
         code = read_port (0x60);
-        if (code < 0) 
-            return;
         switch (code)
         {
             case BACKSPACE:
