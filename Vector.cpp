@@ -1,51 +1,80 @@
-#include "Vector.h"
+п»ї#include "Vector.h"
 
+//default class constructor
 template <class T>
-Vector<T>::Vector(int n_size)						//коструктор класса по умолчанию
+Vector<T>::Vector(int n_size)						
 {
-	size = n_size;			//задаём значение size которое будет равно заданному n_size(по умолчанию 0)
-	el = new T[size];		//создание динамического массива длинной size и типа Т
+	size = n_size;			
+	el = new T[size];	
+	T x(0);
+	for (int i = 0; i < size; i++)
+		el[i] = x;
 }
 
+//copy constructor
 template<class T>
-Vector<T>::Vector(const Vector & a)					//конструктор копирования
+Vector<T>::Vector(const Vector & a)					
 {
-	size = a.size;						//копируем значение в size 
-	el = new T[size];					//создание динамического массива длинной size и типа Т
+	size = a.size;						 
+	el = new T[size];					
 	for (int i = 0; i < size; i++)
 	{
-		el[i] = a.el[i];				//перенос всех элементов в соответсвующие ячейки
+		el[i] = a.el[i];				
 	}
 }
 
-//мы имеем оператор имеющий L-value и R-value
-//R-value мы передаем в скобочках как статичный вектор
-//L-value мы возвращаем значение
+//We have an operator having L-value and R-value
+//We pass R-value in brackets as a static vector
+//L-value we return the value
 template<class T>
-Vector<T> &Vector<T>::operator=(Vector&& other)		//описание оператора присваивания(=)
+Vector<T> &Vector<T>::operator=(const Vector<T>& other)		//assignment statement description(a = b)
 {
-	if (this != other)					//проверка чтобы слева и справа не стоял один и тот же элемент
+	if (this != &other)					//checking that the same element doesn't stand left and right
 	{
-		delete[]el;						//удаляем уже не нужные нам элементы
-		size = other.size;				//задаём размер равный копируемому
-		el = new T[size];				//создание динамического массива длинной size и типа Т
+		delete[]el;						//delete the elements we no longer need
+		size = other.size;				//set the size equal to the copied
+		el = new T[size];				//creation of a dynamic array of long size and type T
 		for (int i = 0; i < size; i++)	
 		{
-			el[i] = other.el[i];		//перенос всех элементов в соответсвующие ячейки
+			el[i] = other.el[i];		//transfer of all elements to the corresponding cells
 		}
 	}
-	return *this;						//возвращаем в L-value полученный вектор
+	return *this;						//return the received vector to L-value
 }
 
-//оператор [] позволяет вернуть значение типа Т содержащиеся в массиве на месте с
+//operator + 
+//stacks up all the values вЂ‹вЂ‹in their places
+template<class T>
+Vector<T> Vector<T>::operator+(const Vector<T>& other)
+{
+	Vector<T> x(*this);
+	for (int i = 0; i < other.size; i++)
+		x.push_back(other.el[i]);
+	return x;
+}
+
+//operator [] 
+//allows you to return a value of type T contained in the array in place with
 template<class T>
 T Vector<T>::operator[](int c)
 {
 		return el[c];
 }
 
-//следующие шесть функций - определяют операторы сравнения
-//оператор == требует равенство и длины векторов и всех значений векторов
+//-\(o_o)/-  a piece of shit  -\(o_o)/-
+template<class T>
+std::ostream & Vector<T>::operator<<(std::ostream & out)
+{
+	for (int i = 0; i < size; i++)
+	{
+		out << el[i]<<"\n";
+	}
+	return out;
+}
+
+//next six functions - define comparison operators
+//operator ==
+//requires equality and length of vectors and all values вЂ‹вЂ‹of vectors
 template<class T>
 bool Vector<T>::operator==(const Vector & a)
 {
@@ -61,7 +90,8 @@ bool Vector<T>::operator==(const Vector & a)
 	return false;
 }
 
-//оператор != требует при равенстве длины векторов неравенство хотя бы одного значения векторов
+//operator !=
+//if the vectors are equal, the inequality of at least one value of the vectors
 template<class T>
 bool Vector<T>::operator!=(const Vector & a)
 {
@@ -77,7 +107,9 @@ bool Vector<T>::operator!=(const Vector & a)
 	return true;
 }
 
-//оператор >= требует чтобы вектор слева имел большую или равную длину и все элементы правого вектора были меньше или равны левых
+//operator >=
+//requires that the vector on the left has a greater or equal length 
+//and all elements of the right vector are less than or equal to the left
 template<class T>
 bool Vector<T>::operator>=(const Vector & a)
 {
@@ -93,7 +125,9 @@ bool Vector<T>::operator>=(const Vector & a)
 	return false;
 }
 
-//оператор <= требует чтобы вектор справа имел большую или равную длину и все элементы левого вектора были меньше или равны правых
+//operator <= 
+//requires that the vector on the right has a greater or equal length
+//and all elements of the left vector are less than or equal to the right
 template<class T>
 bool Vector<T>::operator<=(const Vector & a)
 {
@@ -109,7 +143,9 @@ bool Vector<T>::operator<=(const Vector & a)
 	return false;
 }
 
-//оператор > требует чтобы вектор слева имел большую или равную длину и все элементы правого вектора были меньше левых
+//operator > 
+//requires that the vector on the left has a greater or equal length 
+//and all elements of the right vector are smaller than the left
 template<class T>
 bool Vector<T>::operator>(const Vector & a)
 {
@@ -125,7 +161,9 @@ bool Vector<T>::operator>(const Vector & a)
 	return false;
 }
 
-//оператор < требует чтобы вектор справа имел большую или равную длину и все элементы левого вектора были меньше правых
+//operator <
+//requires that the vector on the right has a greater or equal length 
+//and all elements of the left vector are smaller than the right
 template<class T>
 bool Vector<T>::operator<(const Vector & a)
 {
@@ -141,7 +179,8 @@ bool Vector<T>::operator<(const Vector & a)
 	return false;
 }
 
-//функция push_back, добавляющая элемент в конец вектора
+//function push_back
+//add an element to the end of Vector
 template<class T>
 void Vector<T>::push_back(T elem)
 {
@@ -161,7 +200,8 @@ void Vector<T>::push_back(T elem)
 	delete[]n_el;
 }
 
-//функция pop_back, удаляющая последний элемент в векторе
+//function pop_back
+//delete last elemeht in the Vector
 template<class T>
 void Vector<T>::pop_back()
 {
@@ -180,14 +220,14 @@ void Vector<T>::pop_back()
 	delete[]n_el;
 }
 
-//функция возвращающая длину вектора
+//return size of the Vector
 template<class T>
 int Vector<T>::length()
 {
 	return size;
 }
 
-//функция проверяет пуст ли вектор 
+//is it empty?  
 template<class T>
 bool Vector<T>::empty()
 {
@@ -197,7 +237,7 @@ bool Vector<T>::empty()
 		return true;
 }
 
-//функция удаляет все элементы вектора и делает его длину = 0
+//delete all elements and makes size = 0
 template<class T>
 void Vector<T>::clear()
 {
@@ -206,7 +246,7 @@ void Vector<T>::clear()
 	el = new T[size];
 }
 
-//функция вставляет элемент в позицию pos
+//add an element in position pos
 template<class T>
 void Vector<T>::insert(int pos, T elem)
 {
@@ -253,7 +293,7 @@ void Vector<T>::insert(int pos, T elem)
 	}
 }
 
-//функция удаляет k элементов (по умолчанию 1) начиная с позиции pos
+//delete k elements (default k = 1), starts from position pos
 template<class T>
 void Vector<T>::erase(int pos, int k)
 {
@@ -286,7 +326,7 @@ void Vector<T>::erase(int pos, int k)
 	}
 }
 
-//деструктор
+//destructor
 template <class T>
 Vector<T>::~Vector()
 {
