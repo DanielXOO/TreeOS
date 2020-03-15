@@ -1,6 +1,6 @@
 #ifndef STDLIB_H
 #define STDLIB_H
-#define NULL ((void*)0)
+#define NULL nullptr      //not tested but in VS19 works
 typedef unsigned char uint8;
 typedef signed char int8;
 
