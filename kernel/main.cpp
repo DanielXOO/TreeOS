@@ -1,23 +1,13 @@
-#include "keyDriver.hpp"
-void clean(void) 
-{
-    unsigned int i = 0;
-    while(i < COLUMNS_IN_LINE * LINES * BYTES_FOR_EACH_ELEMENT)
-    {
-    vidptr[i] = ' ';
-    vidptr[i + 1] = 0x07;
-    i = i + 2;
-    }
-}
-void main(void)
+#include "keybord/keybord.hpp"
+#include "terminal/terminal.hpp"
+
+void main()
 {
     clean();
+    const char *out = "my first";
+    outp("my first");
     idt_init();
-    kb_init(); 
-    while(true);
+    kb_init();
+    while (true)
+        ;
 }
-
-    
-
-
-
